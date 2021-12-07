@@ -8137,7 +8137,7 @@ define(String.prototype, "padRight", "".padEnd);
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.state = exports.loadSearchResults = exports.getSearchResultsPage = exports.createMatrix = void 0;
+exports.state = exports.loadSearchResults = exports.loadFavouritedProjects = exports.getSearchResultsPage = exports.createMatrix = void 0;
 
 var _config = require("./config.js");
 
@@ -8199,24 +8199,23 @@ var createMatrix = /*#__PURE__*/function () {
 
           case 15:
             mtx = _context.sent;
-            console.log(mtx);
             state.allProjects = mtx;
             state.search.results = mtx;
             state.search.totalPages = Math.ceil(mtx.length / state.search.resultsPerPage);
-            _context.next = 25;
+            _context.next = 24;
             break;
 
-          case 22:
-            _context.prev = 22;
+          case 21:
+            _context.prev = 21;
             _context.t0 = _context["catch"](0);
             throw _context.t0;
 
-          case 25:
+          case 24:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[0, 22]]);
+    }, _callee, null, [[0, 21]]);
   }));
 
   return function createMatrix() {
@@ -8226,59 +8225,54 @@ var createMatrix = /*#__PURE__*/function () {
 
 exports.createMatrix = createMatrix;
 
-var loadSearchResults = /*#__PURE__*/function () {
-  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(query) {
-    return regeneratorRuntime.wrap(function _callee2$(_context2) {
-      while (1) {
-        switch (_context2.prev = _context2.next) {
-          case 0:
-            _context2.prev = 0;
-            state.search.query = query;
-            state.search.results = state.allProjects.filter(function (project) {
-              return project[1].toLowerCase().includes(query);
-            }); // if (query === "") {
-            //   controller.reset(); // Run intial set up
-            // } else {
-            //   state.search.results = state.search.results.filter((project) =>
-            //     project[1].toLowerCase().includes(query)
-            //   );
-            //   mainApp.runMatrix(mtx, 1); // Run filtered set up
-            // }
+var loadSearchResults = function loadSearchResults(query) {
+  state.search.query = query;
+  state.search.results = state.allProjects.filter(function (project) {
+    return project[1].toLowerCase().includes(query);
+  }); // if (query === "") {
+  //   controller.reset(); // Run intial set up
+  // } else {
+  //   state.search.results = state.search.results.filter((project) =>
+  //     project[1].toLowerCase().includes(query)
+  //   );
+  //   mainApp.runMatrix(mtx, 1); // Run filtered set up
+  // }
 
-            state.search.page = 1;
-            _context2.next = 9;
-            break;
-
-          case 6:
-            _context2.prev = 6;
-            _context2.t0 = _context2["catch"](0);
-            throw _context2.t0;
-
-          case 9:
-          case "end":
-            return _context2.stop();
-        }
-      }
-    }, _callee2, null, [[0, 6]]);
-  }));
-
-  return function loadSearchResults(_x) {
-    return _ref2.apply(this, arguments);
-  };
-}();
+  state.search.totalPages = Math.ceil(state.search.results.length / state.search.resultsPerPage);
+  state.search.page = 1;
+};
 
 exports.loadSearchResults = loadSearchResults;
+
+var loadFavouritedProjects = function loadFavouritedProjects() {
+  state.search.results = state.allProjects.filter(favourited);
+  state.search.totalPages = Math.ceil(state.search.results.length / state.search.resultsPerPage);
+  state.search.page = 1;
+};
+
+exports.loadFavouritedProjects = loadFavouritedProjects;
 
 var getSearchResultsPage = function getSearchResultsPage() {
   var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : state.search.page;
   var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : state.search.results;
   state.search.page = page;
+  state.search.totalPages = Math.ceil(state.search.results.length / state.search.resultsPerPage);
   var start = (page - 1) * state.search.resultsPerPage;
   var end = page * state.search.resultsPerPage;
   return data.slice(start, end);
 };
 
 exports.getSearchResultsPage = getSearchResultsPage;
+
+function favourited(project) {
+  for (var i = 0; i < localStorage.length; i++) {
+    if (project[0] == localStorage.key(i)) {
+      return true;
+    }
+  }
+
+  return false;
+}
 },{"./config.js":"js/config.js","babel-polyfill":"node_modules/babel-polyfill/lib/index.js"}],"js/views/resultsView.js":[function(require,module,exports) {
 "use strict";
 
@@ -8294,6 +8288,7 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
 var projectList = document.querySelector(".projects");
+var header__user = document.querySelector(".header__user");
 
 var resultsView = /*#__PURE__*/function () {
   function resultsView() {
@@ -8301,6 +8296,19 @@ var resultsView = /*#__PURE__*/function () {
   }
 
   _createClass(resultsView, [{
+    key: "addHandlerFavourited",
+    value: function addHandlerFavourited(handler, reset) {
+      header__user.addEventListener("click", function () {
+        this.classList.toggle("activeUser");
+
+        if (this.classList.contains("activeUser")) {
+          handler();
+        } else {
+          reset();
+        }
+      });
+    }
+  }, {
     key: "render",
     value: function render(data) {
       projectList.innerHTML = ""; // For each row (array), create a HTML card
@@ -8309,8 +8317,7 @@ var resultsView = /*#__PURE__*/function () {
         var htmlString = "\n            <li class=\"project-card-container\">\n                <img\n                src=\"".concat(project[3], "\"\n                alt=\"\"\n                class=\"project-card__img\"\n                />\n                <div class=\"project-card__text-container\">\n                <div>\n                <p class=\"project-card__id\" style=\"display: none;\">").concat(project[0], "</p>\n                <h2 class=\"project-card__title\">").concat(project[1], "</h2>\n                <p class=\"project-card__eta\">Est. ").concat(project[2], "</p>\n                </div>\n                <i class=\"project-card__heart bi bi-suit-heart\"></i>\n                </div>\n            </li>");
         projectList.insertAdjacentHTML("beforeend", htmlString);
       });
-      var likeProject = document.querySelectorAll(".project-card__heart");
-      console.log(likeProject); // FAVOURITE PROJECTS
+      var likeProject = document.querySelectorAll(".project-card__heart"); // FAVOURITE PROJECTS
       // Putting it here for now since it only works after items load
 
       likeProject.forEach(function (item) {
@@ -8426,42 +8433,53 @@ var _default = new paginationView();
 
 exports.default = _default;
 },{}],"js/views/searchBarView.js":[function(require,module,exports) {
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+"use strict";
 
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
 var header = document.querySelector("header");
 var searchContainer = document.querySelector(".search-bar");
+var searchInput = document.querySelector(".search-bar__input");
 var bannerContainer = document.querySelector(".hero-banner-container");
-searchObsOpt = {
-  root: null,
-  threshold: 0
-};
 
-fixSearchContainer = function fixSearchContainer(entries) {
-  var _entries = _slicedToArray(entries, 1),
-      entry = _entries[0]; // Since "fixed" results in overlap, we have to adjust the margin for the banner as well
-
-
-  if (!entry.isIntersecting) {
-    searchContainer.classList.add("search-fixed");
-    bannerContainer.style.marginTop = "6rem";
-  } else {
-    searchContainer.classList.remove("search-fixed");
-    bannerContainer.style.marginTop = "0";
+var searchBarView = /*#__PURE__*/function () {
+  function searchBarView() {
+    _classCallCheck(this, searchBarView);
   }
-};
 
-searchObserver = new IntersectionObserver(fixSearchContainer, searchObsOpt);
-searchObserver.observe(header);
+  _createClass(searchBarView, [{
+    key: "addHandlerSearch",
+    value: function addHandlerSearch(handler) {
+      searchInput.addEventListener("keyup", function (e) {
+        // Scroll up every time you type a key
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+        handler();
+      });
+    }
+  }, {
+    key: "getQuery",
+    value: function getQuery() {
+      // Make case insensitive
+      return searchInput.value.toLowerCase();
+    }
+  }]);
+
+  return searchBarView;
+}();
+
+var _default = new searchBarView();
+
+exports.default = _default;
 },{}],"js/views/requestBarView.js":[function(require,module,exports) {
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
@@ -8530,7 +8548,7 @@ var _resultsView = _interopRequireDefault(require("./views/resultsView"));
 
 var _paginationView = _interopRequireDefault(require("./views/paginationView"));
 
-var searchBarView = _interopRequireWildcard(require("./views/searchBarView"));
+var _searchBarView = _interopRequireDefault(require("./views/searchBarView"));
 
 var requestBarView = _interopRequireWildcard(require("./views/requestBarView"));
 
@@ -8539,6 +8557,18 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
@@ -8556,40 +8586,20 @@ var reset = function reset() {
 
 reset();
 
-var controlSearchResults = /*#__PURE__*/function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-    var query, setOfProjects;
-    return regeneratorRuntime.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            // 1) Get search query
-            query = searchView.getQuery(); // 2) Load search results into state.search.results
-
-            _context.next = 3;
-            return model.loadSearchResults(query);
-
-          case 3:
-            // 3) Load sliced search results of certain page
-            setOfProjects = model.getSearchResultsPage(); // 4) Create cards based on the set of projects
-
-            _resultsView.default.render(setOfProjects); // 5) Render initial pagination buttons
+var controlSearchResults = function controlSearchResults() {
+  // 1) Get search query
+  var query = _searchBarView.default.getQuery(); // 2) Load search results into state.search.results
 
 
-            _paginationView.default.render(model.state.search.totalPages, model.state.search.page);
+  model.loadSearchResults(query); // 3) Load sliced search results of certain page
 
-          case 6:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee);
-  }));
+  var setOfProjects = model.getSearchResultsPage(); // 4) Create cards based on the set of projects
 
-  return function controlSearchResults() {
-    return _ref.apply(this, arguments);
-  };
-}();
+  _resultsView.default.render(setOfProjects); // 5) Render initial pagination buttons
+
+
+  _paginationView.default.render(model.state.search.totalPages, model.state.search.page);
+};
 
 var controlPagination = function controlPagination(goToPage) {
   // 1) Load sliced search results of certain page
@@ -8601,13 +8611,25 @@ var controlPagination = function controlPagination(goToPage) {
   _paginationView.default.render(model.state.search.totalPages, model.state.search.page);
 };
 
+var controlFavourited = function controlFavourited() {
+  // 1) Load favourited projects
+  model.loadFavouritedProjects(); // 2) Load sliced search results of certain page
+
+  var setOfProjects = model.getSearchResultsPage(); // 3) Create cards based on the set of projects
+
+  _resultsView.default.render(setOfProjects); // 4) Render initial pagination buttons
+
+
+  _paginationView.default.render(model.state.search.totalPages, model.state.search.page);
+};
+
 var init = /*#__PURE__*/function () {
-  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
-    return regeneratorRuntime.wrap(function _callee2$(_context2) {
+  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+    return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
-        switch (_context2.prev = _context2.next) {
+        switch (_context.prev = _context.next) {
           case 0:
-            _context2.next = 2;
+            _context.next = 2;
             return model.createMatrix();
 
           case 2:
@@ -8616,23 +8638,52 @@ var init = /*#__PURE__*/function () {
 
             _paginationView.default.addHandlerClick(controlPagination);
 
-          case 4:
+            _resultsView.default.addHandlerFavourited(controlFavourited, reset);
+
+            _searchBarView.default.addHandlerSearch(controlSearchResults);
+
+          case 6:
           case "end":
-            return _context2.stop();
+            return _context.stop();
         }
       }
-    }, _callee2);
+    }, _callee);
   }));
 
   return function init() {
-    return _ref2.apply(this, arguments);
+    return _ref.apply(this, arguments);
   };
 }();
 
-init(); // Add favourite feature for the account
-// Set up search functionality
-// Add individual project page popup
+init(); // Add individual project page popup
 // Add event handlers for everything
+// ===== FIND SOME WAY TO FIT SEARCH BAR INTO VIEW ==========
+
+var header = document.querySelector("header");
+var searchContainer = document.querySelector(".search-bar");
+var searchInput = document.querySelector(".search-bar__input");
+var bannerContainer = document.querySelector(".hero-banner-container");
+var searchObsOpt = {
+  root: null,
+  threshold: 0
+};
+
+var fixSearchContainer = function fixSearchContainer(entries) {
+  var _entries = _slicedToArray(entries, 1),
+      entry = _entries[0]; // Since "fixed" results in overlap, we have to adjust the margin for the banner as well
+
+
+  if (!entry.isIntersecting) {
+    searchContainer.classList.add("search-fixed");
+    bannerContainer.style.marginTop = "6rem";
+  } else {
+    searchContainer.classList.remove("search-fixed");
+    bannerContainer.style.marginTop = "0";
+  }
+};
+
+var searchObserver = new IntersectionObserver(fixSearchContainer, searchObsOpt);
+searchObserver.observe(header);
 },{"./model":"js/model.js","./views/resultsView":"js/views/resultsView.js","./views/paginationView":"js/views/paginationView.js","./views/searchBarView":"js/views/searchBarView.js","./views/requestBarView":"js/views/requestBarView.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -8661,7 +8712,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50468" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52866" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

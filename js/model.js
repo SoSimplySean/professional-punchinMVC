@@ -31,8 +31,6 @@ export const createMatrix = async function () {
       project.map((text) => text.slice(1, -1))
     );
 
-    console.log(mtx);
-
     state.allProjects = mtx;
     state.search.results = mtx;
 
@@ -44,27 +42,36 @@ export const createMatrix = async function () {
   }
 };
 
-export const loadSearchResults = async function (query) {
-  try {
-    state.search.query = query;
+export const loadSearchResults = function (query) {
+  state.search.query = query;
 
-    state.search.results = state.allProjects.filter((project) =>
-      project[1].toLowerCase().includes(query)
-    );
+  state.search.results = state.allProjects.filter((project) =>
+    project[1].toLowerCase().includes(query)
+  );
 
-    // if (query === "") {
-    //   controller.reset(); // Run intial set up
-    // } else {
-    //   state.search.results = state.search.results.filter((project) =>
-    //     project[1].toLowerCase().includes(query)
-    //   );
-    //   mainApp.runMatrix(mtx, 1); // Run filtered set up
-    // }
+  // if (query === "") {
+  //   controller.reset(); // Run intial set up
+  // } else {
+  //   state.search.results = state.search.results.filter((project) =>
+  //     project[1].toLowerCase().includes(query)
+  //   );
+  //   mainApp.runMatrix(mtx, 1); // Run filtered set up
+  // }
 
-    state.search.page = 1;
-  } catch (err) {
-    throw err;
-  }
+  state.search.totalPages = Math.ceil(
+    state.search.results.length / state.search.resultsPerPage
+  );
+
+  state.search.page = 1;
+};
+
+export const loadFavouritedProjects = function () {
+  state.search.results = state.allProjects.filter(favourited);
+
+  state.search.totalPages = Math.ceil(
+    state.search.results.length / state.search.resultsPerPage
+  );
+  state.search.page = 1;
 };
 
 export const getSearchResultsPage = function (
@@ -73,8 +80,21 @@ export const getSearchResultsPage = function (
 ) {
   state.search.page = page;
 
+  state.search.totalPages = Math.ceil(
+    state.search.results.length / state.search.resultsPerPage
+  );
+
   const start = (page - 1) * state.search.resultsPerPage;
   const end = page * state.search.resultsPerPage;
 
   return data.slice(start, end);
 };
+
+function favourited(project) {
+  for (let i = 0; i < localStorage.length; i++) {
+    if (project[0] == localStorage.key(i)) {
+      return true;
+    }
+  }
+  return false;
+}

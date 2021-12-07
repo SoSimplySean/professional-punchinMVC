@@ -1,25 +1,23 @@
 const header = document.querySelector("header");
 const searchContainer = document.querySelector(`.search-bar`);
+const searchInput = document.querySelector(`.search-bar__input`);
 const bannerContainer = document.querySelector(`.hero-banner-container`);
 
-searchObsOpt = {
-  root: null,
-  threshold: 0,
-};
+class searchBarView {
+  addHandlerSearch(handler) {
+    searchInput.addEventListener(`keyup`, (e) => {
+      // Scroll up every time you type a key
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
 
-fixSearchContainer = function (entries) {
-  const [entry] = entries;
-
-  // Since "fixed" results in overlap, we have to adjust the margin for the banner as well
-  if (!entry.isIntersecting) {
-    searchContainer.classList.add("search-fixed");
-    bannerContainer.style.marginTop = `6rem`;
-  } else {
-    searchContainer.classList.remove("search-fixed");
-    bannerContainer.style.marginTop = `0`;
+      handler();
+    });
   }
-};
 
-searchObserver = new IntersectionObserver(fixSearchContainer, searchObsOpt);
+  getQuery() {
+    // Make case insensitive
+    return searchInput.value.toLowerCase();
+  }
+}
 
-searchObserver.observe(header);
+export default new searchBarView();

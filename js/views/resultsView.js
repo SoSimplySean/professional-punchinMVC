@@ -1,6 +1,18 @@
 const projectList = document.querySelector(`.projects`);
+const header__user = document.querySelector(`.header__user`);
 
 class resultsView {
+  addHandlerFavourited(handler, reset) {
+    header__user.addEventListener("click", function () {
+      this.classList.toggle("activeUser");
+      if (this.classList.contains("activeUser")) {
+        handler();
+      } else {
+        reset();
+      }
+    });
+  }
+
   render(data) {
     projectList.innerHTML = "";
 
@@ -27,7 +39,6 @@ class resultsView {
     });
 
     const likeProject = document.querySelectorAll(".project-card__heart");
-    console.log(likeProject);
 
     // FAVOURITE PROJECTS
     // Putting it here for now since it only works after items load

@@ -2,10 +2,10 @@
   "name": "punchin-mvc",
   "version": "1.0.0",
   "description": "",
-  "main": "controller.js",
+  "default": "controller.js",
   "scripts": {
     "dev": "parcel index.html",
-    "build": "parcel build index.html"
+    "build": "parcel build index.html --dist-dir ./dist"
   },
   "author": "",
   "license": "ISC",
