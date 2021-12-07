@@ -1,0 +1,21 @@
+{
+  "name": "punchin-mvc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "controller.js",
+  "scripts": {
+    "dev": "parcel index.html",
+    "build": "parcel build index.html"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "parcel-bundler": "^1.12.5",
+    "sass": "^1.44.0"
+  },
+  "dependencies": {
+    "babel-polyfill": "^6.26.0",
+    "bootstrap-icons": "^1.7.2",
+    "regenerator-runtime": "^0.13.9"
+  }
+}

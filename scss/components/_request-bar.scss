@@ -1,0 +1,20 @@
+@use "../abstracts" as *;
+
+.request-bar {
+  background-color: $main;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  cursor: pointer;
+
+  h1 {
+    color: $secondary;
+    font-size: 1rem;
+    text-align: center;
+    padding: 1rem 0 1rem 0;
+  }
+
+  u {
+    color: $secondary;
+  }
+}

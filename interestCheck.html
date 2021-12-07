@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!--====== Favicon Icon ======-->
+    <link rel="shortcut icon" href="" type="image/svg" />
+
+    <!-- ===== STYLESHEET ===== -->
+    <link rel="stylesheet" href="./scss/main.scss" />
+
+    <title>Punchin - Groupbuy Tracker</title>
+  </head>
+  <body>
+    <!-- ====== HEADER START ====== -->
+    <header class="header">
+      <!-- <div class="header__container"> -->
+      <img class="header__logo" src="./img/logo.png" alt="" />
+      <div class="navbar">
+        <ul class="navbar__list">
+          <a href="index.html"><li class="navbar__link">PROJECT TRACKER</li></a>
+          <a href="interestCheck.html"
+            ><li class="navbar__link navbar__link--active">
+              INTEREST CHECKER
+            </li></a
+          >
+        </ul>
+      </div>
+      <i class="header__user bi bi-person-circle"></i>
+      <!-- </div> -->
+    </header>
+    <!-- ====== HEADER END ====== -->
+
+    <!-- ====== SEARCH-BAR START ====== -->
+    <div class="search-bar">
+      <input
+        type="text"
+        name="searchBar"
+        class="search-bar__input"
+        placeholder="Find your project"
+      />
+    </div>
+    <!-- ====== SEARCH-BAR END ====== -->
+
+    <!-- ====== HERO-BANNER START ====== -->
+    <div class="hero-banner-container">
+      <div class="hero-banner">
+        <h1 class="hero-banner__text">
+          Wanna get early access to the next
+          <span style="color: #6981c9; line-height: 19.2px">EPIC</span> design?
+        </h1>
+      </div>
+    </div>
+    <!-- ====== HERO-BANNER END ====== -->
+
+    <!-- ====== PROJECTS START ====== -->
+    <div class="projects-container">
+      <!-- To be populated via JavaScript -->
+      <ul class="projects"></ul>
+    </div>
+    <!-- ====== PROJECTS END ====== -->
+
+    <!-- ====== PAGINATION START ====== -->
+    <div class="pagination">
+      <ul class="pagination__buttons">
+        <!-- <li class="pagination__prev"><i class="fas fa-chevron-left"></i></li>
+        <li class="pagination__number"><span>1</span></li>
+        <li class="pagination__dots"><span>...</span></li>
+        <li class="pagination__number"><span>3</span></li>
+        <li class="pagination__number active"><span>4</span></li>
+        <li class="pagination__number"><span>5</span></li>
+        <li class="pagination__dots"><span>...</span></li>
+        <li class="pagination__number"><span>7</span></li>
+        <li class="pagination__next"><i class="fas fa-chevron-right"></i></li> -->
+      </ul>
+    </div>
+    <!-- ====== PAGINATION END ====== -->
+
+    <!-- ====== FOOTER START ====== -->
+    <footer class="footer-container">
+      <div class="footer">
+        <!-- Footer-About -->
+        <div class="footer__section">
+          <h3>About</h3>
+          <p>
+            Punchin is an ETA tracker for projects with long fulfilment periods.
+          </p>
+        </div>
+        <div class="footer__break"><hr /></div>
+        <!-- Footer-Contact -->
+        <div class="footer__section">
+          <h3>Contact Us</h3>
+          <p>
+            Please get in touch at sean@oneolympus.com if you have any
+            questions, concerns or feedback.
+          </p>
+        </div>
+        <div class="footer__break"><hr /></div>
+        <!-- Footer-Copyright -->
+        <div class="footer__section">
+          <p class="footer__copyright">© 2021 Punchin</p>
+        </div>
+      </div>
+    </footer>
+    <!-- ====== FOOTER END ====== -->
+
+    <!-- ====== REQUEST BAR START ====== -->
+    <div class="request-bar display-none">
+      <h1>
+        Can't find a project or want to add yours?
+        <u>Send a request</u> &#8594;
+      </h1>
+    </div>
+    <!-- ====== REQUEST BAR END ====== -->
+
+    <!-- ====== REQUEST MODAL START ====== -->
+    <!-- Modal Background Overlay -->
+    <div class="modal-overlay hidden"></div>
+    <!-- Request Modal -->
+    <div class="request-modal-container hidden">
+      <form action="" class="request-modal">
+        <h1 class="request-modal__h1">Project Request</h1>
+        <label for="email"></label>
+        <input
+          type="email"
+          placeholder="Enter email..."
+          name="email"
+          required
+        />
+
+        <label for="project"></label>
+        <textarea
+          rows="5"
+          name="project"
+          placeholder="Enter project name..."
+          required
+        ></textarea>
+        <div class="request-modal__button-container">
+          <button type="submit" class="request-modal__button">Submit</button>
+        </div>
+      </form>
+    </div>
+    <!-- ====== REQUEST MODAL END ====== -->
+
+    <!-- MAIN JS -->
+    <script src="./js/controller.js"></script>
+  </body>
+</html>

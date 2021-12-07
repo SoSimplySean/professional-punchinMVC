@@ -1,0 +1,12 @@
+@use "../abstracts" as *;
+
+.hero-banner-container {
+  height: 9rem;
+  display: flex;
+  align-items: center;
+  margin: 0 1rem 1rem 1rem;
+}
+
+.hero-banner {
+  max-width: 600px;
+}

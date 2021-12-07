@@ -1,0 +1,60 @@
+@use "../abstracts" as *;
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 160px;
+
+  ul {
+    display: flex;
+    background-color: $secondary;
+    padding: 0.5rem;
+    border-radius: 50px;
+  }
+
+  ul li {
+    list-style: none;
+    text-align: center;
+    font-size: 1rem;
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    line-height: 40px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  &__dots {
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    cursor: default;
+    width: 12px;
+  }
+
+  &__number {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    margin: 0 3px;
+  }
+
+  &__prev,
+  &__next {
+    width: 36px;
+  }
+
+  &__prev {
+    border-radius: 20px 2px 2px 20px;
+  }
+
+  &__next {
+    border-radius: 2px 20px 20px 2px;
+  }
+
+  ul li.active,
+  &__number:hover,
+  &__prev:hover,
+  &__next:hover {
+    background: white;
+  }
+}

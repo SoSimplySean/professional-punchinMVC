@@ -1,0 +1,65 @@
+@use "../abstracts" as *;
+
+.projects-container {
+  height: auto;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 3rem;
+  padding: 1rem;
+}
+
+.projects {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.project-card-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: $secondary;
+  height: 26.5rem;
+  width: 21rem;
+  border-radius: 10px;
+  list-style: none;
+}
+
+.project-card {
+  &__img {
+    max-width: 100%;
+    height: 21rem;
+    border-radius: 10px 10px 0 0;
+    object-fit: cover;
+  }
+
+  &__text-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 0.4rem;
+    width: 85%;
+  }
+
+  &__id {
+  }
+
+  &__title {
+    margin-top: 1rem;
+  }
+
+  &__eta {
+    font-size: 1rem;
+  }
+
+  &__heart {
+    margin-top: 0.7rem;
+    font-size: 1.7rem;
+    transition-duration: 0.2s;
+  }
+
+  &__heart:hover {
+    color: $highlight-1;
+  }
+}

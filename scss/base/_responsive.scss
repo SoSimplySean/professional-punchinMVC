@@ -1,0 +1,33 @@
+@use "../abstracts" as *;
+
+@media screen and (min-width: 768px) {
+  h1 {
+    font-size: 3rem;
+  }
+
+  .hero-banner-container {
+    justify-content: center;
+  }
+
+  .hero-banner {
+    text-align: center;
+  }
+
+  .project-page-timeline li:nth-child(odd) {
+    padding-right: 0rem;
+  }
+
+  .project-page-timeline li:nth-child(even) {
+    left: 50%;
+    padding-left: 0rem;
+  }
+}
+
+@media screen and (min-width: 1100px) {
+  .project-page-container {
+    grid-template-columns: 2fr 1fr;
+    grid-template-areas:
+      "content timeline"
+      "support-form timeline";
+  }
+}

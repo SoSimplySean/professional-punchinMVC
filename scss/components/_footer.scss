@@ -1,0 +1,30 @@
+@use "../abstracts" as *;
+
+.footer-container {
+  background-color: $secondary;
+  margin-top: auto;
+}
+
+.footer {
+  margin: 0 1rem 0 1rem;
+  padding: 0.5rem 0;
+
+  h3 {
+    margin: 0.25rem 0;
+  }
+
+  &__section {
+    padding: 1.2rem 0 1.2rem 0;
+  }
+
+  &__break {
+    border-width: 0.2px;
+    border-color: $text-colour;
+    border-radius: 1px;
+    opacity: 40%;
+  }
+
+  &__copyright {
+    font-weight: bold;
+  }
+}

@@ -1,0 +1,20 @@
+@use "../abstracts" as *;
+
+.hidden {
+  display: none;
+}
+
+.display-none {
+  display: none;
+}
+
+.heart {
+  color: $highlight-1;
+}
+
+.search-fixed {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  border-bottom: 1px solid #1a4f4f4f;
+}
