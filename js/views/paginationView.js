@@ -1,8 +1,10 @@
-const pagination__buttons = document.querySelector(".pagination__buttons");
+class PaginationView {
+  constructor() {
+    this.pagination__buttons = document.querySelector(".pagination__buttons");
+  }
 
-class paginationView {
   addHandlerClick(handler) {
-    pagination__buttons.addEventListener("click", function (e) {
+    this.pagination__buttons.addEventListener("click", function (e) {
       const btn = e.target.closest(".pagination__button");
       if (!btn) return;
       const goToPage = +btn.dataset.goto;
@@ -45,12 +47,12 @@ class paginationView {
 
     // Adds next button
     if (currentPage < totalPages) {
-      buttons += `<li class="pagination__button pagination__next"><i class="bi bi-chevron-right" data-goto="${
+      buttons += `<li class="pagination__button pagination__next"  data-goto="${
         currentPage + 1
-      }"></i></li>`;
+      }"><i class="bi bi-chevron-right"></i></li>`;
     }
 
-    pagination__buttons.innerHTML = buttons;
+    this.pagination__buttons.innerHTML = buttons;
   }
 }
-export default new paginationView();
+export default new PaginationView();

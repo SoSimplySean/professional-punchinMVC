@@ -1,9 +1,11 @@
-const projectList = document.querySelector(`.projects`);
-const header__user = document.querySelector(`.header__user`);
+class ResultsView {
+  constructor() {
+    this.projectList = document.querySelector(`.projects`);
+    this.header__user = document.querySelector(`.header__user`);
+  }
 
-class resultsView {
   addHandlerFavourited(handler, reset) {
-    header__user.addEventListener("click", function () {
+    this.header__user.addEventListener("click", function () {
       this.classList.toggle("activeUser");
       if (this.classList.contains("activeUser")) {
         handler();
@@ -14,7 +16,7 @@ class resultsView {
   }
 
   render(data) {
-    projectList.innerHTML = "";
+    this.projectList.innerHTML = "";
 
     // For each row (array), create a HTML card
     data.forEach((project) => {
@@ -35,7 +37,7 @@ class resultsView {
                 </div>
             </li>`;
 
-      projectList.insertAdjacentHTML(`beforeend`, htmlString);
+      this.projectList.insertAdjacentHTML(`beforeend`, htmlString);
     });
 
     const likeProject = document.querySelectorAll(".project-card__heart");
@@ -72,4 +74,4 @@ class resultsView {
   }
 }
 
-export default new resultsView();
+export default new ResultsView();

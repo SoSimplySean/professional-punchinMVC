@@ -1,5 +1,5 @@
 import { CSV, RES_PER_PAGE } from "./config.js";
-require("babel-polyfill");
+// require("babel-polyfill");
 
 export const state = {
   project: {},

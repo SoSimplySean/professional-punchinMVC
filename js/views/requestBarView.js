@@ -1,52 +1,28 @@
-const requestBar = document.querySelector(".request-bar");
-const footer = document.querySelector(".footer-container");
-const requestButton = document.querySelector(".request-button");
-const modalOverlay = document.querySelector(".modal-overlay");
-const requestModal = document.querySelector(".request-modal-container");
-const projectPageContainer = document.querySelector(`.project-page-container`);
+class RequestBarView {
+  constructor() {
+    this.requestBar = document.querySelector(".request-bar");
+    this.footer = document.querySelector(".footer-container");
 
-// REQUEST BAR
-
-reqObsOpt = {
-  root: null,
-  threshold: 0.99,
-};
-
-fixRequestBar = function (entries) {
-  const [entry] = entries;
-
-  if (entry.isIntersecting) {
-    requestBar.classList.add("display-none");
-  } else {
-    requestBar.classList.remove("display-none");
+    this.reqObsOpt = {
+      root: null,
+      threshold: 0.99,
+    };
   }
-};
 
-requestObserver = new IntersectionObserver(fixRequestBar, reqObsOpt);
+  addIntersectionObserver(handler) {
+    const requestObserver = new IntersectionObserver(handler, this.reqObsOpt);
+    requestObserver.observe(this.footer);
+  }
 
-requestObserver.observe(footer);
+  fixRequestBar(entries) {
+    const [entry] = entries;
 
-// REQUEST FORM
+    if (entry.isIntersecting) {
+      this.requestBar.classList.add("display-none");
+    } else {
+      this.requestBar.classList.remove("display-none");
+    }
+  }
+}
 
-// Request form - general function to unhide
-const showRequestForm = function () {
-  modalOverlay.classList.remove("hidden");
-  requestModal.classList.remove("hidden");
-};
-
-// Request form - general function to hide
-const hideRequestForm = function () {
-  modalOverlay.classList.add("hidden");
-  requestModal.classList.add("hidden");
-  projectPageContainer.innerHTML = "";
-};
-
-// Request form - button activation to unhide
-requestBar.addEventListener(`click`, showRequestForm);
-
-// Request form - button activation to hide
-modalOverlay.addEventListener(`click`, hideRequestForm);
-document.addEventListener(`keydown`, function (e) {
-  if (e.key === "Escape" && !requestModal.classList.contains("hidden"))
-    hideRequestForm();
-});
+export default new RequestBarView();

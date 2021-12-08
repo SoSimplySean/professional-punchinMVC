@@ -1,25 +1,28 @@
 import * as model from "./model";
-import resultsView from "./views/resultsView";
-import paginationView from "./views/paginationView";
-import searchBarView from "./views/searchBarView";
-import * as requestBarView from "./views/requestBarView";
+import ResultsView from "./views/ResultsView";
+import PaginationView from "./views/PaginationView";
+import SearchBarView from "./views/SearchBarView";
+import RequestBarView from "./views/RequestBarView";
+import RequestFormView from "./views/RequestFormView";
+import ProjectPageView from "./views/ProjectPageView";
 
 const reset = function () {
   // 1) Get the projects to load for page 1
   const setOfProjects = model.getSearchResultsPage(1, model.state.allProjects);
 
   // 2) Create cards based on the set of projects
-  resultsView.render(setOfProjects);
+  ResultsView.render(setOfProjects);
 
   // 3) Render initial pagination buttons
-  paginationView.render(model.state.search.totalPages, model.state.search.page);
-};
+  PaginationView.render(model.state.search.totalPages, model.state.search.page);
 
-reset();
+  //   4) Add project page event listener
+  ProjectPageView.addProjectPage(model.state.allProjects);
+};
 
 const controlSearchResults = function () {
   // 1) Get search query
-  const query = searchBarView.getQuery();
+  const query = SearchBarView.getQuery();
 
   // 2) Load search results into state.search.results
   model.loadSearchResults(query);
@@ -28,10 +31,10 @@ const controlSearchResults = function () {
   const setOfProjects = model.getSearchResultsPage();
 
   // 4) Create cards based on the set of projects
-  resultsView.render(setOfProjects);
+  ResultsView.render(setOfProjects);
 
   // 5) Render initial pagination buttons
-  paginationView.render(model.state.search.totalPages, model.state.search.page);
+  PaginationView.render(model.state.search.totalPages, model.state.search.page);
 };
 
 const controlPagination = function (goToPage) {
@@ -39,10 +42,10 @@ const controlPagination = function (goToPage) {
   const setOfProjects = model.getSearchResultsPage(goToPage);
 
   // 2) Create cards based on the set of projects
-  resultsView.render(setOfProjects);
+  ResultsView.render(setOfProjects);
 
   //   3) Render pagination buttons
-  paginationView.render(model.state.search.totalPages, model.state.search.page);
+  PaginationView.render(model.state.search.totalPages, model.state.search.page);
 };
 
 const controlFavourited = function () {
@@ -51,55 +54,46 @@ const controlFavourited = function () {
   // 2) Load sliced search results of certain page
   const setOfProjects = model.getSearchResultsPage();
   // 3) Create cards based on the set of projects
-  resultsView.render(setOfProjects);
+  ResultsView.render(setOfProjects);
   // 4) Render initial pagination buttons
-  paginationView.render(model.state.search.totalPages, model.state.search.page);
+  PaginationView.render(model.state.search.totalPages, model.state.search.page);
+};
+
+const controlSearchBar = function (entries) {
+  SearchBarView.fixSearchContainer(entries);
+};
+
+const controlRequestBar = function (entries) {
+  RequestBarView.fixRequestBar(entries);
+};
+
+const controlShowModal = function () {
+  RequestFormView.showRequestForm();
+};
+
+const controlHideModal = function () {
+  RequestFormView.hideRequestForm();
 };
 
 const init = async function () {
   // 1) Create original dataset from CSV
   await model.createMatrix();
-
   //   2) Reset the system
   reset();
 
-  paginationView.addHandlerClick(controlPagination);
-  resultsView.addHandlerFavourited(controlFavourited, reset);
-  searchBarView.addHandlerSearch(controlSearchResults);
+  PaginationView.addHandlerClick(controlPagination);
+  ResultsView.addHandlerFavourited(controlFavourited, reset);
+  SearchBarView.addIntersectionObserver(controlSearchBar);
+  SearchBarView.addHandlerSearch(controlSearchResults);
+  RequestBarView.addIntersectionObserver(controlRequestBar);
+  RequestFormView.addHandlerClickBar(controlShowModal);
+  RequestFormView.addHandlerClickOverlay(controlHideModal);
+  RequestFormView.addHandlerEscape(controlHideModal);
 };
 init();
 
-// Add individual project page popup
-// Add event handlers for everything
-
-// ===== FIND SOME WAY TO FIT SEARCH BAR INTO VIEW ==========
-
-const header = document.querySelector("header");
-const searchContainer = document.querySelector(`.search-bar`);
-const searchInput = document.querySelector(`.search-bar__input`);
-const bannerContainer = document.querySelector(`.hero-banner-container`);
-
-const searchObsOpt = {
-  root: null,
-  threshold: 0,
-};
-
-const fixSearchContainer = function (entries) {
-  const [entry] = entries;
-
-  // Since "fixed" results in overlap, we have to adjust the margin for the banner as well
-  if (!entry.isIntersecting) {
-    searchContainer.classList.add("search-fixed");
-    bannerContainer.style.marginTop = `6rem`;
-  } else {
-    searchContainer.classList.remove("search-fixed");
-    bannerContainer.style.marginTop = `0`;
-  }
-};
-
-const searchObserver = new IntersectionObserver(
-  fixSearchContainer,
-  searchObsOpt
-);
-
-searchObserver.observe(header);
+// Add JS for interest checker. Same layout. Just link to different things.
+// Fix CSS for individual project page popup
+// Fix the favourite issue
+// Add "No favourited projects" if there are no projects
+// Hook up to Netlify

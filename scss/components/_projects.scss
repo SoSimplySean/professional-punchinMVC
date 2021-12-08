@@ -24,6 +24,12 @@
   width: 21rem;
   border-radius: 10px;
   list-style: none;
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: 0px 1px 20px -4px rgba(0, 0, 0, 0.9);
+    transition: 0.4s;
+  }
 }
 
 .project-card {

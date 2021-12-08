@@ -231,6 +231,129 @@ p {
   grid-template-areas: "content" "timeline" "support-form";
 }
 
+.project-page-content-container {
+  grid-area: content;
+}
+
+.project-page-image {
+  max-width: 100%;
+  border-radius: 10px;
+}
+
+.project-page-text-container {
+  width: 100%;
+  padding-top: 1rem;
+}
+
+.project-page-text-container p {
+  margin-top: 1rem;
+}
+
+.project-page-timeline-container {
+  min-height: 700px;
+  grid-area: timeline;
+  position: relative;
+}
+
+.project-page-timeline::after {
+  content: "";
+  position: absolute;
+  width: 6px;
+  background-color: #4f4f4f;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  margin-left: -3px;
+}
+
+.project-page-timeline li {
+  position: relative;
+  text-align: center;
+  width: 50%;
+  list-style: none;
+  margin-top: 5rem;
+  font-family: gilroy;
+  font-weight: bold;
+  font-size: 1rem;
+  line-height: 1.2em;
+}
+
+.project-page-timeline li:nth-child(odd) {
+  padding-right: 1rem;
+}
+
+.project-page-timeline li:nth-child(even) {
+  left: 50%;
+  padding-left: 1rem;
+}
+
+.project-page-timeline li:not(:last-child) {
+  margin-bottom: 5rem;
+}
+
+.project-page-timeline li::after {
+  content: "";
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  right: -17px;
+  background-color: white;
+  border: 4px solid #ff9494;
+  top: 3px;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.project-page-timeline li:nth-child(even)::after {
+  left: -16px;
+}
+
+.project-page-support-form-container {
+  grid-area: support-form;
+}
+
+.support-form input,
+textarea {
+  width: 100%;
+  max-width: 100%;
+  min-width: 100%;
+  margin-bottom: 1rem;
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  font-size: 1em;
+  line-height: 1.5em;
+  border: none;
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.support-form input:nth-of-type(1) {
+  margin-top: 1.5rem;
+}
+
+.support-form-button-container {
+  display: flex;
+  justify-content: center;
+}
+
+.support-form button {
+  padding: 4px 16px;
+  font-family: "Roboto", sans-serif;
+  font-weight: bold;
+  font-size: 1em;
+  color: var(--main);
+  border-radius: 4px;
+  border: 2px solid #6981c9;
+  background-color: #e1e9f3;
+  cursor: pointer;
+  text-align: center;
+}
+
+.support-form button:hover {
+  background-color: #6981c9;
+  color: #e1e9f3;
+}
+
 .pagination {
   display: flex;
   justify-content: center;
@@ -302,6 +425,11 @@ p {
   width: 21rem;
   border-radius: 10px;
   list-style: none;
+  cursor: pointer;
+}
+.project-card-container:hover {
+  box-shadow: 0px 1px 20px -4px rgba(0, 0, 0, 0.9);
+  transition: 0.4s;
 }
 
 .project-card__img {
